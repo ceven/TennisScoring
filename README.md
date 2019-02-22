@@ -40,6 +40,13 @@ This project requires Java 10. I use gradle (version 5.2.1) to manage dependenci
  
  ## Improvement considerations
  
+ ### Testing
+ 
+ - Considering the large number of possible scoring outcomes for a tennis game, more tests could/should be added, 
+ particularly around:
+    - ending (winning) conditions for a set, game, etc
+    - players 'fighting' for winning a game, moving between Deuce and Advantage
+ 
  ### Naming
  
  - While the two methods previously described are named after the problem description, we could consider renaming:

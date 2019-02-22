@@ -1,6 +1,7 @@
 public class TennisMatchScoring {
 
-    private static final int MIN_POINTS_TO_WIN_A_GAME = 4;
+    private static final int MIN_POINTS_TO_WIN_A_GAME = 4,
+            MIN_POINTS_TO_WIN_A_SET = 6;
 
     private PlayerScore player1Score, player2Score;
 
@@ -9,6 +10,12 @@ public class TennisMatchScoring {
         this.player2Score = new PlayerScore();
     }
 
+    /**
+     * @return the score of the current match, displaying the current set score followed by the current game score.
+     * E.g. 1-0, 30-40 indicates that player 1 has won the first game and player 2 is leading the second game 40 to 30.
+     * NB: If the current game score is nil (0-0) then it is omitted from the score. E.g. 4-2 indicates that the 1st
+     * player is leading the match 4 to 2 and no player has scored a point in the next game yet.
+     */
     public String score() {
         final StringBuilder scoreBuilder = new StringBuilder()
                 .append(String.format("%s-%s", player1Score.getGameWonsCount(), player2Score.getGameWonsCount()));
@@ -51,7 +58,18 @@ public class TennisMatchScoring {
         return diffPoints > 0 ? GameScoringStatus.ADVANTAGE_PLAYER_1 : GameScoringStatus.ADVANTAGE_PLAYER_2;
     }
 
+    /**
+     * Update the score of the match after a win from the given player.
+     *
+     * @param winner the name of the player who won the current point
+     */
     public void pointWonBy(final String winner) {
+
+        if (tennisSetIsWon()) {
+            return;
+        }
+
+        // TODO: final tie-break scoring
 
         Player winnerPlayer = Player.fromName(winner);
 
@@ -63,6 +81,20 @@ public class TennisMatchScoring {
             player1Score.resetCurrentGameScore();
             player2Score.resetCurrentGameScore();
         }
+    }
+
+    private boolean tennisSetIsWon() {
+        if (Math.max(player1Score.getGameWonsCount(), player2Score.getGameWonsCount()) >= MIN_POINTS_TO_WIN_A_SET &&
+                Math.abs(player1Score.getGameWonsCount() - player2Score.getGameWonsCount()) > 1) {
+            // The score is 6-x or x-6 where x <= 4, or 7-5 or 5-7
+            return true;
+        }
+        if (Math.max(player1Score.getGameWonsCount(), player2Score.getGameWonsCount()) > MIN_POINTS_TO_WIN_A_SET &&
+                Math.min(player1Score.getGameWonsCount(), player2Score.getGameWonsCount()) == MIN_POINTS_TO_WIN_A_SET) {
+            // The score is 6-7 or 7-6
+            return true;
+        }
+        return false;
     }
 
     private boolean gameIsWon() {
