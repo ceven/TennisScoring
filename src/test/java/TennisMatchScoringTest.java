@@ -11,8 +11,6 @@ import static org.junit.Assert.assertEquals;
 @RunWith(Parameterized.class)
 public class TennisMatchScoringTest {
 
-    private static final String PLAYER_1 = "Player 1", PLAYER_2 = "Player 2";
-
     private TennisMatchScoring tennisMatchScoring;
 
     private String winnerSequence;
@@ -63,7 +61,10 @@ public class TennisMatchScoringTest {
         if (winnerSequence == null) {
             return;
         }
-        winnerSequence.chars().forEach(playerId -> tennisMatchScoring.pointWonBy(playerId == 1 ? PLAYER_1 : PLAYER_2));
+        winnerSequence.chars().forEach(playerId ->
+                tennisMatchScoring.pointWonBy(playerId == 1 ? Player.PLAYER_1.getPlayerName() :
+                        Player.PLAYER_2.getPlayerName())
+        );
     }
 
 }
