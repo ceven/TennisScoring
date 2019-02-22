@@ -1,7 +1,8 @@
 public class TennisMatchScoring {
 
     private static final int MIN_POINTS_TO_WIN_A_GAME = 4,
-            MIN_POINTS_TO_WIN_A_SET = 6;
+            MIN_POINTS_TO_WIN_A_SET = 6,
+            MIN_POINTS_TO_WIN_TIE_BREAK = 7;
 
     private PlayerScore player1Score, player2Score;
 
@@ -69,8 +70,6 @@ public class TennisMatchScoring {
             return;
         }
 
-        // TODO: final tie-break scoring
-
         Player winnerPlayer = Player.fromName(winner);
 
         PlayerScore winnerPlayerScore = getPlayerScore(winnerPlayer);
@@ -98,9 +97,18 @@ public class TennisMatchScoring {
     }
 
     private boolean gameIsWon() {
+        if (isTieBreak()) {
+            return Math.max(player1Score.getCurrentGamePointsCount(), player2Score.getCurrentGamePointsCount())
+                    >= MIN_POINTS_TO_WIN_TIE_BREAK &&
+                    Math.abs(player1Score.getCurrentGamePointsCount() - player2Score.getCurrentGamePointsCount()) > 1;
+        }
         return Math.max(player1Score.getCurrentGamePointsCount(), player2Score.getCurrentGamePointsCount())
                 >= MIN_POINTS_TO_WIN_A_GAME &&
                 Math.abs(player1Score.getCurrentGamePointsCount() - player2Score.getCurrentGamePointsCount()) > 1;
+    }
+
+    private boolean isTieBreak() {
+        return player1Score.getGameWonsCount() == 6 && player2Score.getCurrentGamePointsCount() == 6;
     }
 
     private PlayerScore getPlayerScore(Player player) {
