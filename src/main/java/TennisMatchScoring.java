@@ -1,16 +1,17 @@
 public class TennisMatchScoring {
 
-    private static final int MIN_POINTS_IN_GAME = 3;
+    private static final int MIN_POINTS_TO_WIN_A_GAME = 4;
+
     private PlayerScore player1Score, player2Score;
 
     public TennisMatchScoring() {
-        this.player1Score = new PlayerScore(Player.PLAYER_1);
-        this.player2Score = new PlayerScore(Player.PLAYER_2);
+        this.player1Score = new PlayerScore();
+        this.player2Score = new PlayerScore();
     }
 
     public String score() {
         final StringBuilder scoreBuilder = new StringBuilder()
-                .append(String.format("%s-%s", player1Score.getSetWonsCount(), player2Score.getSetWonsCount()));
+                .append(String.format("%s-%s", player1Score.getGameWonsCount(), player2Score.getGameWonsCount()));
 
         final GameScoringStatus gameScoringStatus = determineGameScoringStatus();
 
@@ -19,9 +20,9 @@ public class TennisMatchScoring {
                 break;
             case IN_PROGRESS:
                 scoreBuilder.append(", ")
-                        .append(player1Score.getCurrentGamePointsCount())
+                        .append(player1Score.getGamePointsCountInTennisFashion())
                         .append("-")
-                        .append(player2Score.getCurrentGamePointsCount());
+                        .append(player2Score.getGamePointsCountInTennisFashion());
                 break;
             default:
                 scoreBuilder.append(", ")
@@ -36,8 +37,7 @@ public class TennisMatchScoring {
 
         int diffPoints = player1Score.getCurrentGamePointsCount() - player2Score.getCurrentGamePointsCount();
 
-        if (player1Score.getCurrentGamePointsCount() < MIN_POINTS_IN_GAME &&
-                player2Score.getCurrentGamePointsCount() < MIN_POINTS_IN_GAME) {
+        if (player1Score.getCurrentGamePointsCount() < MIN_POINTS_TO_WIN_A_GAME - 1) {
             if (diffPoints == 0) {
                 return GameScoringStatus.NOT_STARTED;
             }
@@ -52,7 +52,27 @@ public class TennisMatchScoring {
     }
 
     public void pointWonBy(final String winner) {
-        // TODO
+
+        Player winnerPlayer = Player.fromName(winner);
+
+        PlayerScore winnerPlayerScore = getPlayerScore(winnerPlayer);
+        winnerPlayerScore.wonGamePoint();
+
+        if (gameIsWon()) {
+            winnerPlayerScore.wonCurrentGame();
+            player1Score.resetCurrentGameScore();
+            player2Score.resetCurrentGameScore();
+        }
+    }
+
+    private boolean gameIsWon() {
+        return Math.max(player1Score.getCurrentGamePointsCount(), player2Score.getCurrentGamePointsCount())
+                >= MIN_POINTS_TO_WIN_A_GAME &&
+                Math.abs(player1Score.getCurrentGamePointsCount() - player2Score.getCurrentGamePointsCount()) > 1;
+    }
+
+    private PlayerScore getPlayerScore(Player player) {
+        return player == Player.PLAYER_1 ? player1Score : player2Score;
     }
 
 }

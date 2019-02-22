@@ -28,10 +28,10 @@ public class TennisMatchScoringTest {
                 {"1", "0-0, 15-0"},
                 {"2", "0-0, 0-15"},
                 {"121212", "0-0, Deuce"},
-                {"1212121", "0-0, Advantage Player 1"},
-                {"1212122", "0-0, Advantage Player 2"},
-                {"12121211", "1-0, 0-0"},
-                {"12121222", "0-1, 0-0"}
+                {"1212121", "0-0, Advantage player 1"},
+                {"1212122", "0-0, Advantage player 2"},
+                {"12121211", "1-0"},
+                {"12121222", "0-1"}
         });
     }
 
@@ -58,13 +58,15 @@ public class TennisMatchScoringTest {
      *                       The sequence is given in the order the points were played.
      */
     private void executePointsWonBy(String winnerSequence) {
-        if (winnerSequence == null) {
+        if (winnerSequence == null || winnerSequence.length() == 0) {
             return;
         }
-        winnerSequence.chars().forEach(playerId ->
-                tennisMatchScoring.pointWonBy(playerId == 1 ? Player.PLAYER_1.getPlayerName() :
-                        Player.PLAYER_2.getPlayerName())
-        );
+        Arrays.stream(winnerSequence.split(""))
+                .map(Integer::parseInt)
+                .forEach(playerId ->
+                        tennisMatchScoring.pointWonBy(playerId == 1 ? Player.PLAYER_1.getPlayerName() :
+                                Player.PLAYER_2.getPlayerName())
+                );
     }
 
 }
