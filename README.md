@@ -1,8 +1,10 @@
-# Tennis TennisMatchScoring System
+# Tennis Scoring System
+
+[![Build Status](https://travis-ci.com/ceven/TennisScoring.svg?branch=master)](https://travis-ci.com/ceven/TennisScoring)
 
 This project aims at implementing a scoring system for a tennis match.
 
-## TennisMatchScoring vocabulary and rules
+## Vocabulary and rules
 
 For the aim of this scoring system, we will use the rules and vocabulary described below. Note that while these may look similar to the real rules and vocabulary of tennis in many aspects, some differences and simplifications are made.
  - A match of tennis is played between 2 players in a single set. The set winner is the winner of the match.
@@ -33,7 +35,7 @@ This project requires Java 10. I use gradle (version 5.2.1) to manage dependenci
 
  - Open a terminal prompt and clone this repository in the location of your choice
  - Navigate to the project root
- - Type ./gradlew clean build to build the project and run unit tests
+ - Type `./gradlew clean build` to build the project and run unit tests
  
  
  ## Improvement considerations
@@ -41,4 +43,4 @@ This project requires Java 10. I use gradle (version 5.2.1) to manage dependenci
  ### Naming
  
  - While the two methods previously described are named after the problem description, we could consider renaming:
-  - the `score` method to `getScore` or `getMatchScore`
+    - the `score` method to `getScore` or `getMatchScore`
