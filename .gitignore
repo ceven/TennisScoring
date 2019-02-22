@@ -1,3 +1,8 @@
 # IntelliJ files
+.gradle/
 .idea/
 *.iml
+
+# Build-generated files
+out/
+build/
